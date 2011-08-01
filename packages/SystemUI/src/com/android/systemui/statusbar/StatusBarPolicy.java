@@ -1110,19 +1110,26 @@ public class StatusBarPolicy {
             if (SystemProperties.get("ro.ril.samsung_cdma").equals("true")) {
                 final int cdmaDbm = mSignalStrength.getCdmaDbm();
                 if (cdmaDbm >= -75) iconLevel = 4;
-                else if (cdmaDbm >= -85)  iconLevel = 3;
-                else if (cdmaDbm >= -95)  iconLevel = 2;
+                else if (cdmaDbm >= -85) iconLevel = 3;
+                else if (cdmaDbm >= -95) iconLevel = 2;
                 else if (cdmaDbm >= -100) iconLevel = 1;
                 else iconLevel = 0;
             } else {
                 if ((mPhoneState == TelephonyManager.CALL_STATE_IDLE) && isEvdo()
-                && !mAlwaysUseCdmaRssi) {
+                    && !mAlwaysUseCdmaRssi) {
                     iconLevel = getEvdoLevel();
                     if (false) {
                         Slog.d(TAG, "use Evdo level=" + iconLevel + " to replace Cdma Level=" + getCdmaLevel());
                     }
                 } else {
-                    iconLevel = getCdmaLevel();
+                    if ((mPhoneState == TelephonyManager.CALL_STATE_IDLE) && isEvdo()){
+                        iconLevel = getEvdoLevel();
+                        if (false) {
+                            Slog.d(TAG, "use Evdo level=" + iconLevel + " to replace Cdma Level=" + getCdmaLevel());
+                        }
+                    } else {
+                        iconLevel = getCdmaLevel();
+                    }
                 }
             }
         }
